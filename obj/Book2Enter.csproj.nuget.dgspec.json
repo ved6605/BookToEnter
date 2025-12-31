@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nirav\\Desktop\\BookToEnter\\Book2Enter.csproj": {}
+    "C:\\Users\\User\\Desktop\\Book2Enter\\Book2Enter\\Book2Enter.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nirav\\Desktop\\BookToEnter\\Book2Enter.csproj": {
+    "C:\\Users\\User\\Desktop\\Book2Enter\\Book2Enter\\Book2Enter.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nirav\\Desktop\\BookToEnter\\Book2Enter.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\Book2Enter\\Book2Enter\\Book2Enter.csproj",
         "projectName": "Book2Enter",
-        "projectPath": "C:\\Users\\Nirav\\Desktop\\BookToEnter\\Book2Enter.csproj",
-        "packagesPath": "C:\\Users\\Nirav\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nirav\\Desktop\\BookToEnter\\obj\\",
+        "projectPath": "C:\\Users\\User\\Desktop\\Book2Enter\\Book2Enter\\Book2Enter.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\Book2Enter\\Book2Enter\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Nirav\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"

@@ -3,6 +3,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container (MVC)
 builder.Services.AddControllersWithViews();
 
+// App services
+builder.Services.AddSingleton<Book2Enter.Services.IUserService, Book2Enter.Services.UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

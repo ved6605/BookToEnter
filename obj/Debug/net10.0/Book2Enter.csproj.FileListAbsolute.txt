@@ -18,9 +18,7 @@ C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\Book2Enter.RazorAs
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
-C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\scopedcss\bundle\Book2Enter.styles.css
-C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\scopedcss\projectbundle\Book2Enter.bundle.scp.css
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\igan12jf24-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\vmku9skd4v-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\qz2mcfega9-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
@@ -83,8 +81,6 @@ C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\rp47bug
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\ezif07zay0-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\uurhh92g90-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\a32l8s7kq6-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\x4x8cwz2ug-{0}-a72xteeqg9-a72xteeqg9.gz
-C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\compressed\ea2igjpff6-{0}-a72xteeqg9-a72xteeqg9.gz
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\staticwebassets.development.json
@@ -189,3 +185,4 @@ C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\staticwebassets.build.endpo
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\swae.build.ex.cache
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\Book2Enter.genruntimeconfig.cache
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\ref\Book2Enter.dll
+C:\Users\User\Desktop\Book2Enter\Book2Enter\obj\Debug\net10.0\Book2Enter.sourcelink.json
