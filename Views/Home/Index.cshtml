@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="home-wrapper">
+    <div class="home-card">
+        <div class="home-row">
+            <div class="home-qr">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Book2Enter-Home" alt="QR" />
+            </div>
+            <div class="home-info">
+                <h2>Welcome to Book2Enter</h2>
+                <p style="opacity:.85">QR‑Based Event Entry System — quickly scan or use Enrollment + OTP to enter events.</p>
+                <p style="opacity:.75;font-size:13px">Use the Login page to scan or sign in as an admin. The interface follows the same visual style as the login screen.</p>
+                <a asp-controller="Home" asp-action="Login" class="btn btn-primary btn-cta">Go to Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .home-wrapper{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:40px 0;
+    }
+    .home-card{
+        max-width:900px;
+        width:100%;
+        background:#0f1720;
+        color:#fff;
+        border-radius:12px;
+        padding:28px;
+        box-shadow:0 10px 30px rgba(0,0,0,.4);
+    }
+    .home-row{display:flex;gap:20px;align-items:center}
+    .home-qr{flex:0 0 200px}
+    .home-qr img{width:200px;border-radius:8px}
+    .home-info{flex:1}
+    .home-info h2{margin-top:0}
+    .btn-cta{margin-top:12px}
+</style>
