@@ -1,257 +1,272 @@
 @{
-    Layout = null; // keep full-page login layout as originally authored
+    Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Book2Enter – Login</title>
+    <meta charset="UTF-8" />
+    <title>Book2Enter | Login</title>
 
-<style>
-:root {
-    --primary:#00ffcc;
-    --bg:#0f2027;
-    --card:#111;
-    --error:#ff6b6b;
-}
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --card: #111;
+            --muted: #aaa;
+            --error: #ff6b6b;
+        }
 
-* { box-sizing: border-box; }
+        * { box-sizing: border-box; }
 
-body {
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    font-family:Segoe UI,sans-serif;
-    color:white;
-}
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
 
-.login-card {
-    width:380px;
-    background:var(--card);
-    padding:25px;
-    border-radius:14px;
-    text-align:center;
-    box-shadow:0 25px 50px rgba(0,0,0,.6);
-    animation:fadeIn .8s ease;
-}
+        .login-card {
+            width: 380px;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,.6);
+            animation: fadeIn .8s ease;
+        }
 
-@@keyframes fadeIn {
-    from {opacity:0; transform:translateY(20px);}
-    to {opacity:1; transform:translateY(0);}
-}
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-/* Toggle */
-.toggle {
-    display:flex;
-    margin-bottom:15px;
-}
-.toggle button {
-    flex:1;
-    padding:10px;
-    border:none;
-    background:#222;
-    color:#aaa;
-    cursor:pointer;
-}
-.toggle button.active {
-    background:var(--primary);
-    color:#000;
-}
+        /* LOGO BOX */
+        .logo-box {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 14px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
 
-/* QR */
-.qr-wrapper {
-    position:relative;
-    width:160px;
-    height:160px;
-    margin:15px auto;
-}
-.qr-wrapper img {
-    width:100%;
-    filter:blur(6px) grayscale(1);
-    transition:.6s;
-}
-.qr-wrapper.unlocked img {
-    filter:none;
-}
-.scan-line {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:5px;
-    background:var(--primary);
-    box-shadow:0 0 15px var(--primary);
-    display:none;
-}
-.lock {
-    position:absolute;
-    bottom:-22px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:26px;
-    transition:.4s;
-}
-.lock.unlock {
-    color:var(--primary);
-    transform:translateX(-50%) scale(1.2);
-}
+            /* NEON BORDER */
+            border: 2px solid var(--primary);
+            box-shadow:
+                0 0 8px rgba(0,255,204,.6),
+                0 0 18px rgba(0,255,204,.4),
+                inset 0 0 8px rgba(0,255,204,.3);
+        }
 
-/* Inputs & Buttons */
-input, button.main {
-    width:100%;
-}
-input {
-    padding:12px;
-    margin-top:10px;
-    border-radius:7px;
-    border:2px solid transparent;
-    outline:none;
-    font-size:15px;
-    transition:.3s;
-}
-input:focus {
-    border-color:var(--primary);
-    box-shadow:0 0 10px rgba(0,255,204,.4);
-    transform:scale(1.02);
-}
-input.error {
-    border-color:var(--error);
-    animation:shake .35s;
-}
-@@keyframes shake {
-    0%{transform:translateX(0);}
-    25%{transform:translateX(-5px);}
-    50%{transform:translateX(5px);}
-    75%{transform:translateX(-5px);}
-    100%{transform:translateX(0);}
-}
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
 
-button.main {
-    margin-top:15px;
-    padding:12px;
-    border:none;
-    border-radius:7px;
-    background:var(--primary);
-    color:#000;
-    font-size:16px;
-    cursor:pointer;
-}
-button.main:hover {
-    background:#00d6ad;
-}
+            /* SLIGHT ZOOM */
+            transform: scale(1.08);
 
-.error-text {
-    margin-top:8px;
-    color:var(--error);
-    display:none;
-}
+            /* LOCKED STATE */
+            filter: grayscale(1) blur(3px);
+            transition: filter .6s ease, transform .6s ease;
+        }
 
-.otp-box, .admin-box { display:none; }
-.success {
-    margin-top:15px;
-    color:var(--primary);
-    display:none;
-}
-</style>
+        /* UNLOCKED STATE */
+        .logo-box.unlocked img {
+            filter: none;
+            transform: scale(1.12); /* tiny extra zoom on unlock */
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            display: none;
+        }
+
+        /* INPUTS */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 7px;
+            border: 2px solid transparent;
+            background: #1b1b1b;
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0,255,204,.4);
+            transform: scale(1.02);
+        }
+
+        input.error {
+            border-color: var(--error);
+            animation: shake .35s;
+        }
+
+        @@keyframes shake {
+            0%   { transform: translateX(0); }
+            25%  { transform: translateX(-5px); }
+            50%  { transform: translateX(5px); }
+            75%  { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* BUTTON */
+        button.main {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: var(--primary);
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button.main:hover {
+            background: #00d6ad;
+        }
+
+        .forgot {
+            font-size: 14px;
+            color: var(--muted);
+            display: block;
+            margin-top: 8px;
+            text-align: right;
+            text-decoration: none;
+        }
+
+        .forgot:hover { color: var(--primary); }
+
+        .error-text {
+            margin-top: 8px;
+            color: var(--error);
+            display: none;
+        }
+
+        .otp-box,
+        .change-box {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
 
 <div class="login-card">
+
+    <!-- LOGO WITH NEON BORDER + SCAN -->
+    <div id="logoBox" class="logo-box">
+        <img src="@Url.Content("~/images/B2E_Logo_Final.jpg")"
+             alt="Book2Enter Logo" />
+        <div id="scanLine" class="scan-line"></div>
+    </div>
+
     <h2>Book2Enter</h2>
-    <p style="font-size:13px;opacity:.7">QR‑Based Event Entry System</p>
+    <p style="font-size:13px;opacity:.7">QR-Based Event Entry System</p>
 
-    <!-- Toggle -->
-    <div class="toggle">
-        <button id="studentBtn" class="active" onclick="showStudent()">Student</button>
-        <button id="adminBtn" onclick="showAdmin()">Admin</button>
+    <!-- LOGIN -->
+    <div id="loginBox">
+        <input id="userId" type="text" placeholder="User ID" />
+        <input id="password" type="password" placeholder="Password" />
+        <button class="main" id="loginBtn">Login</button>
+        <a href="#" id="forgotLink" class="forgot">Forgot Password?</a>
+        <div class="error-text" id="errLogin"></div>
     </div>
 
-    <!-- QR -->
-    <div class="qr-wrapper" id="qrWrap">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://utu.ac.in/" />
-        <div class="scan-line" id="scanLine"></div>
-        <div class="lock" id="lockIcon">🔒</div>
+    <!-- OTP -->
+    <div class="otp-box" id="otpBox">
+        <input id="otp" type="text" placeholder="Enter OTP" />
+        <button class="main" id="verifyOtpBtn">Verify OTP</button>
+        <div class="error-text" id="errOtp"></div>
     </div>
 
-    <!-- Student -->
-    <div id="studentBox">
-        <input id="enroll" type="text" placeholder="Enrollment Number">
-        <button class="main" onclick="verifyEnroll()">Next</button>
-        <div class="error-text" id="errEnroll">Invalid Enrollment</div>
-
-        <div class="otp-box" id="otpBox">
-            <input id="otp" type="text" placeholder="Enter OTP">
-            <button class="main" onclick="verifyOTP()">Verify OTP</button>
-        </div>
+    <!-- CHANGE PASSWORD -->
+    <div class="change-box" id="changeBox">
+        <input id="newPass" type="password" placeholder="New Password" />
+        <input id="confirmPass" type="password" placeholder="Confirm Password" />
+        <button class="main" id="changePassBtn">Set Password</button>
+        <div class="error-text" id="errChange"></div>
     </div>
 
-    <!-- Admin -->
-    <div class="admin-box" id="adminBox">
-        <input type="text" placeholder="Admin Username">
-        <input type="password" placeholder="Admin Password">
-        <button class="main">Login</button>
-    </div>
-
-    <div class="success" id="success">✔ Login Successful</div>
 </div>
 
 <script>
-function showStudent(){
-    studentBtn.classList.add("active");
-    adminBtn.classList.remove("active");
-    studentBox.style.display="block";
-    adminBox.style.display="none";
-}
-function showAdmin(){
-    adminBtn.classList.add("active");
-    studentBtn.classList.remove("active");
-    studentBox.style.display="none";
-    adminBox.style.display="block";
-}
+    let currentUser = null;
 
-function verifyEnroll(){
-    enroll.classList.remove("error");
-    errEnroll.style.display="none";
+    function animateScan() {
+        const scan = document.getElementById('scanLine');
+        const logo = document.getElementById('logoBox');
 
-    if(enroll.value==="123"){
-        scanLine.style.display="block";
-        scanLine.animate([{top:"0"},{top:"155px"}],{duration:1200});
-        setTimeout(()=>{
-            scanLine.style.display="none";
-            qrWrap.classList.add("unlocked");
-            lockIcon.textContent="🔓";
-            lockIcon.classList.add("unlock");
-            otpBox.style.display="block";
-        },1200);
-    } else {
-        enroll.classList.add("error");
-        errEnroll.style.display="block";
+        scan.style.display = 'block';
+
+        scan.animate(
+            [{ top: '0' }, { top: '104px' }],
+            { duration: 1200 }
+        );
+
+        setTimeout(() => {
+            scan.style.display = 'none';
+            logo.classList.add('unlocked');
+        }, 1200);
     }
-}
 
-function verifyOTP(){
-    otp.classList.remove("error");
-    if(otp.value==="0000"){
-        success.style.display="block";
-    } else {
-        otp.classList.add("error");
+    async function postJson(url, data) {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return res.json();
     }
-}
 
-// Set default view based on query string: ?mode=admin will open Admin tab automatically
-(function(){
-    const params = new URLSearchParams(location.search);
-    if(params.get('mode') === 'admin'){
-        showAdmin();
-    } else {
-        showStudent();
-    }
-})();
+    loginBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        const pwd = password.value;
+
+        if (!uid || !pwd) {
+            errLogin.textContent = 'Enter User ID and Password';
+            errLogin.style.display = 'block';
+            return;
+        }
+
+        animateScan();
+
+        setTimeout(async () => {
+            const res = await postJson('/Home/LoginAjax', {
+                UserId: uid,
+                Password: pwd
+            });
+
+            if (!res.success) {
+                errLogin.textContent = res.message || 'Invalid credentials';
+                errLogin.style.display = 'block';
+                return;
+            }
+
+            if (res.requiresOtp) {
+                currentUser = uid;
+                otpBox.style.display = 'block';
+            } else {
+                window.location.href = res.redirectUrl;
+            }
+        }, 600);
+    };
 </script>
 
 </body>
