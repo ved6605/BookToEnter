@@ -1,0 +1,261 @@
+﻿@page
+@model IndexModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Book2Enter – Login</title>
+
+<style>
+:root {
+    --primary:#00ffcc;
+    --bg:#0f2027;
+    --card:#111;
+    --error:#ff6b6b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    font-family:Segoe UI,sans-serif;
+    color:white;
+}
+
+.login-card {
+    width:380px;
+    background:var(--card);
+    padding:25px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 25px 50px rgba(0,0,0,.6);
+    animation:fadeIn .8s ease;
+}
+
+@@keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+/* Toggle */
+.toggle {
+    display:flex;
+    margin-bottom:15px;
+}
+.toggle button {
+    flex:1;
+    padding:10px;
+    border:none;
+    background:#222;
+    color:#aaa;
+    cursor:pointer;
+}
+.toggle button.active {
+    background:var(--primary);
+    color:#000;
+}
+
+/* QR */
+.qr-wrapper {
+    position:relative;
+    width:160px;
+    height:160px;
+    margin:15px auto;
+}
+.qr-wrapper img {
+    width:100%;
+    filter:blur(6px) grayscale(1);
+    transition:.6s;
+}
+.qr-wrapper.unlocked img {
+    filter:none;
+}
+.scan-line {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+    background:var(--primary);
+    box-shadow:0 0 15px var(--primary);
+    display:none;
+}
+.lock {
+    position:absolute;
+    bottom:-22px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:26px;
+    transition:.4s;
+}
+.lock.unlock {
+    color:var(--primary);
+    transform:translateX(-50%) scale(1.2);
+}
+
+/* Inputs & Buttons */
+input, button.main {
+    width:100%;
+}
+input {
+    padding:12px;
+    margin-top:10px;
+    border-radius:7px;
+    border:2px solid transparent;
+    outline:none;
+    font-size:15px;
+    transition:.3s;
+}
+input:focus {
+    border-color:var(--primary);
+    box-shadow:0 0 10px rgba(0,255,204,.4);
+    transform:scale(1.02);
+}
+input.error {
+    border-color:var(--error);
+    animation:shake .35s;
+}
+@@keyframes shake {
+    0%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    50%{transform:translateX(5px);}
+    75%{transform:translateX(-5px);}
+    100%{transform:translateX(0);}
+}
+
+button.main {
+    margin-top:15px;
+    padding:12px;
+    border:none;
+    border-radius:7px;
+    background:var(--primary);
+    color:#000;
+    font-size:16px;
+    cursor:pointer;
+}
+button.main:hover {
+    background:#00d6ad;
+}
+
+.error-text {
+    margin-top:8px;
+    color:var(--error);
+    display:none;
+}
+
+.otp-box, .admin-box { display:none; }
+.success {
+    margin-top:15px;
+    color:var(--primary);
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h2>Book2Enter</h2>
+    <p style="font-size:13px;opacity:.7">QR‑Based Event Entry System</p>
+
+    <!-- Toggle -->
+    <div class="toggle">
+        <button id="studentBtn" class="active" onclick="showStudent()">Student</button>
+        <button id="adminBtn" onclick="showAdmin()">Admin</button>
+    </div>
+
+    <!-- QR -->
+    <div class="qr-wrapper" id="qrWrap">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://utu.ac.in/" />
+        <div class="scan-line" id="scanLine"></div>
+        <div class="lock" id="lockIcon">🔒</div>
+    </div>
+
+    <!-- Student -->
+    <div id="studentBox">
+        <input id="enroll" type="text" placeholder="Enrollment Number">
+        <button class="main" onclick="verifyEnroll()">Next</button>
+        <div class="error-text" id="errEnroll">Invalid Enrollment</div>
+
+        <div class="otp-box" id="otpBox">
+            <input id="otp" type="text" placeholder="Enter OTP">
+            <button class="main" onclick="verifyOTP()">Verify OTP</button>
+        </div>
+    </div>
+
+    <!-- Admin -->
+    <div class="admin-box" id="adminBox">
+        <input type="text" placeholder="Admin Username">
+        <input type="password" placeholder="Admin Password">
+        <button class="main">Login</button>
+    </div>
+
+    <div class="success" id="success">✔ Login Successful</div>
+</div>
+
+<script>
+function showStudent(){
+    studentBtn.classList.add("active");
+    adminBtn.classList.remove("active");
+    studentBox.style.display="block";
+    adminBox.style.display="none";
+}
+function showAdmin(){
+    adminBtn.classList.add("active");
+    studentBtn.classList.remove("active");
+    studentBox.style.display="none";
+    adminBox.style.display="block";
+}
+
+function verifyEnroll(){
+    enroll.classList.remove("error");
+    errEnroll.style.display="none";
+
+    if(enroll.value==="123"){
+        scanLine.style.display="block";
+        scanLine.animate([{top:"0"},{top:"155px"}],{duration:1200});
+        setTimeout(()=>{
+            scanLine.style.display="none";
+            qrWrap.classList.add("unlocked");
+            lockIcon.textContent="🔓";
+            lockIcon.classList.add("unlock");
+            otpBox.style.display="block";
+        },1200);
+    } else {
+        enroll.classList.add("error");
+        errEnroll.style.display="block";
+    }
+}
+
+function verifyOTP(){
+    otp.classList.remove("error");
+    if(otp.value==="0000"){
+        success.style.display="block";
+    } else {
+        otp.classList.add("error");
+    }
+}
+
+// Set default view based on query string: ?mode=admin will open Admin tab automatically
+(function(){
+    const params = new URLSearchParams(location.search);
+    if(params.get('mode') === 'admin'){
+        showAdmin();
+    } else {
+        showStudent();
+    }
+})();
+</script>
+
+</body>
+</html>
+
