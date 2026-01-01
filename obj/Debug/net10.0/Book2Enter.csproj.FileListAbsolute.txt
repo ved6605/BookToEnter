@@ -189,3 +189,8 @@ C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\staticwebassets.build.endpo
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\swae.build.ex.cache
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\Book2Enter.genruntimeconfig.cache
 C:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\ref\Book2Enter.dll
+c:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\compressed\4dg77w3w5h-{0}-lh5jqnenuu-lh5jqnenuu.gz
+c:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\compressed\4vov57vkfx-{0}-3kuu7fb9q8-3kuu7fb9q8.gz
+c:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\compressed\7fn377f4n3-{0}-tr7xnesq9b-tr7xnesq9b.gz
+c:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\compressed\o6kwgw736y-{0}-49f16rsgit-49f16rsgit.gz
+c:\Users\Nirav\Desktop\BookToEnter\obj\Debug\net10.0\compressed\0krunswpeg-{0}-cqu1itmh26-cqu1itmh26.gz

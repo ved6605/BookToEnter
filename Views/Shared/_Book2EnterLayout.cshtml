@@ -1,0 +1,61 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Book2Enter</title>
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="topbar">
+
+        <!-- LEFT: ONLY LOGO -->
+        <div class="logo">Book2Enter</div>
+
+        <!-- RIGHT: EVERYTHING ELSE -->
+        <div class="right-header">
+
+            <nav class="menu">
+                <a href="#">Home</a>
+                <a href="#">Notifications</a>
+            </nav>
+
+            <div class="user-info">
+                <div class="avatar">RP</div>
+                <span class="user-name">RIYA PATEL</span>
+                <span class="arrow">▾</span>
+
+                <div class="dropdown">
+                    <a href="#">Profile</a>
+                    <a href="#">Change password</a>
+                    <a class="logout" href="#">Logout</a>
+                </div>
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="main">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        © 2025 — Book2Enter | QR-Based Event Entry System
+    </footer>
+
+    <!-- Core scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
