@@ -16,13 +16,19 @@
     <header class="topbar">
 
         <!-- LEFT: ONLY LOGO -->
-        <div class="logo">Book2Enter</div>
+        <div class="logo">
+            <img src="~/images/B2E_Logo_Final.png" alt="Book2Enter logo" class="logo-img" />
+            <span class="logo-text">Book2Enter</span>
+        </div>
 
         <!-- RIGHT: EVERYTHING ELSE -->
         <div class="right-header">
 
             <nav class="menu">
-                <a href="#">Home</a>
+                <a href="#" aria-disabled="true" onclick="event.preventDefault();">Home</a>
+                <a asp-controller="Home" asp-action="About">About</a>
+                <a asp-controller="Home" asp-action="Contact">Contact</a>
+                <a asp-controller="Home" asp-action="Help">Help</a>
                 <a href="#">Notifications</a>
             </nav>
 
