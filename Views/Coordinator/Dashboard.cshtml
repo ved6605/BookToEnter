@@ -1,0 +1,83 @@
+@{
+    Layout = "~/Views/Shared/_Book2EnterLayout.cshtml";
+    ViewData["Title"] = "Coordinator Dashboard";
+}
+
+<div class="dashboard">
+    <section class="status-cards">
+        <div class="card">
+            <h3>Assigned Events</h3>
+            <h1>2</h1>
+        </div>
+        <div class="card">
+            <h3>Active Bookings</h3>
+            <h1>45</h1>
+        </div>
+        <div class="card">
+            <h3>Live Attendees</h3>
+            <h1>12</h1>
+        </div>
+        <div class="card">
+            <h3>Pending Actions</h3>
+            <h1>1</h1>
+        </div>
+    </section>
+
+    <!-- QUICK ACTION: Prominent Scan QR -->
+    <section class="quick-actions">
+        <div class="scan-card">
+            <div class="scan-left">
+                <img src="~/images/scanner-icon.svg" alt="Scan QR" class="scan-illustration" />
+                <div class="scan-info">
+                    <h2>Scan QR for Entry</h2>
+                    <p class="muted">Tap to open camera and scan student QR — instant validation and check-in.</p>
+                </div>
+            </div>
+            <div class="scan-right">
+                <button class="scan-button" onclick="openScanner()" aria-label="Open QR Scanner">
+                    <span class="scan-icon">📷</span>
+                </button>
+                <div class="hint muted">Tap to start scanner • Auto-detects QR</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="upcoming">
+        <h2>Live Tools</h2>
+        <div class="event-box">
+            <div>
+                <h3>TechFest - Ground Floor</h3>
+                <p>Today • Opening check-in window: 30 mins</p>
+            </div>
+            <div class="actions">
+                <a class="btn-secondary" href="#">View Event</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="scan-result">
+        <h2>Last Scan</h2>
+        <div id="scanDetails" class="booking-card muted">No scan yet.</div>
+    </section>
+
+</div>
+
+<!-- Scanner Modal -->
+<div id="scannerModal" class="modal" aria-hidden="true">
+    <div class="modal-content scanner-modal">
+        <button class="close" onclick="closeScanner()">✖</button>
+        <div class="scanner-header">
+            <h3>Scan Student QR</h3>
+            <p class="muted">Point the camera at the student's QR code. The scanner will detect it automatically.</p>
+        </div>
+        <div id="qr-reader" style="width:100%;max-width:480px;margin:0 auto;"></div>
+        <div class="scanner-footer">
+            <button class="btn-secondary" onclick="stopScanner()">Stop</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js"></script>
+    <script src="~/js/coordinator-scanner.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,116 @@
+@{
+    Layout = "~/Views/Shared/_Book2EnterLayout.cshtml";
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="dashboard">
+
+    <!-- QUICK SUMMARY CARDS -->
+    <section class="status-cards">
+
+        <div class="card">
+            <h3>📅 Upcoming Events</h3>
+            <h1>3</h1>
+        </div>
+
+        <div class="card">
+            <h3>🎟 Booked Events</h3>
+            <h1>2</h1>
+        </div>
+
+        <div class="card">
+            <h3>🔓 Active Entries</h3>
+            <h1>1</h1>
+        </div>
+
+        <div class="card">
+            <h3>⏳ Pending Actions</h3>
+            <h1>1</h1>
+        </div>
+
+    </section>
+
+
+    <!-- UPCOMING EVENT (FOCUS AREA) -->
+    <section class="upcoming">
+
+        <h2>My Upcoming Event</h2>
+
+        <div class="event-box">
+
+            <div>
+                <h3>UTU Best Dancer</h3>
+                <p><strong>Date:</strong> 12 Feb • 10:00 AM</p>
+                <p><strong>Venue:</strong> Pushpam Tersadia Hall</p>
+                <p><strong>Status:</strong> 🟢 Entry Open</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn-primary">View Entry Pass</button>
+                <button class="btn-secondary">Event Details</button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- BOOKING LIST -->
+    <section class="bookings">
+
+        <h2>My Bookings</h2>
+
+        <div class="booking-card">
+            <h4>Cyber Security Workshop</h4>
+            <span class="badge booked">Booked</span>
+            <button>View Pass</button>
+        </div>
+
+        <div class="booking-card">
+            <h4>Cultural Night</h4>
+            <span class="badge attended">Attended</span>
+            <button>View Details</button>
+        </div>
+
+    </section>
+
+
+    <!-- ENTRY PASS STATUS -->
+    <section class="entry-status">
+
+        <h2>Entry Pass Status</h2>
+
+        <div class="pass-box">
+            <p>Your entry pass activates 30 minutes before the event.</p>
+
+            <span class="status locked">🔒 Locked</span>
+
+            <button class="btn-primary">Open Entry Pass</button>
+        </div>
+
+    </section>
+
+
+    <!-- AVAILABLE EVENTS -->
+    <section class="available">
+
+        <h2>Available Events</h2>
+
+        <div class="event-list">
+
+            <div class="event-card">
+                <h4>AI Tech Talk</h4>
+                <p>13 Feb — Auditorium</p>
+                <button>Book Now</button>
+            </div>
+
+            <div class="event-card">
+                <h4>Photography Workshop</h4>
+                <p>14 Feb — Lab 3</p>
+                <button>Book Now</button>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>

@@ -1,0 +1,17 @@
+:root { --bg:#0F1720; --card:#0B1220; --accent:#00E0B8; --muted:#9AA6B2; }
+body { background:var(--bg); color:#E6EEF3; font-family:Inter, system-ui, sans-serif; }
+.topbar{display:flex;justify-content:space-between;padding:1rem 2rem;align-items:center;}
+.logo{font-weight:700;color:var(--accent);font-size:1.1rem;}
+.status-cards{display:flex;gap:1rem;padding:1rem 2rem;}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:10px;padding:1rem;width:12rem;box-shadow:0 6px 20px rgba(0,0,0,0.6);} 
+.card:hover{transform:translateY(-6px);transition:transform .18s;} 
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;padding:1rem 2rem;} 
+.next-event .badge{background:linear-gradient(90deg,var(--accent), #06b991);color:#02181a;padding:.25rem .5rem;border-radius:6px;} 
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;} 
+.modal-content{background:var(--card);padding:1.2rem;border-radius:10px;min-width:320px;} 
+.btn{background:var(--accent);color:#02181a;padding:.5rem .8rem;border-radius:8px;border:none;margin-right:.5rem;} 
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--muted);} 
+.small{padding:.25rem .5rem;font-size:.85rem;} 
+.booking-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.02);} 
+.title small{color:var(--muted);display:block;} 
+@media(max-width:768px){ .status-cards{flex-direction:column;} .main-grid{grid-template-columns:1fr;} }
