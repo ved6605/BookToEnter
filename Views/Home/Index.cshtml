@@ -1,43 +1,325 @@
 @{
-    ViewData["Title"] = "Home";
+    Layout = null;
+    var env = Context.RequestServices.GetService<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
+    var wwwroot = env?.WebRootPath ?? "";
+    Func<string,string> t = file => {
+        var p = System.IO.Path.Combine(wwwroot, "images", file);
+        return System.IO.File.Exists(p) ? System.IO.File.GetLastWriteTimeUtc(p).Ticks.ToString() : "0";
+    };
+    var vHeroBg = t("hero-bg.png");
+    var vHeroPhone = t("hero-phone.png");
+    var vLogo = t("B2E_Logo_Final.jpg");
+    var vQrGlow = t("qr-glow.png");
+    var vScanner = t("scanner.png");
+} 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Book2Enter – Home</title>
+
+<style>
+:root{
+    --primary:#1fffd6;
+    --bg:#020b10;
+    --card:#0b1c24;
+    --muted:#9fb8c2;
 }
 
-<div class="home-wrapper">
-    <div class="home-card">
-        <div class="home-row">
-            <div class="home-qr">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Book2Enter-Home" alt="QR" />
-            </div>
-            <div class="home-info">
-                <h2>Welcome to Book2Enter</h2>
-                <p style="opacity:.85">QR‑Based Event Entry System — quickly scan or use Enrollment + OTP to enter events.</p>
-                <p style="opacity:.75;font-size:13px">Use the Login page to scan or sign in as an admin. The interface follows the same visual style as the login screen.</p>
-                <a asp-controller="Home" asp-action="Login" class="btn btn-primary btn-cta">Go to Login</a>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:#fff;
+    overflow-x:hidden;
+}
+
+/* ================= HEADER ================= */
+.site-header{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:transparent;
+}
+.site-header .container{
+    width:100%;
+    max-width:none;          /* remove centering constraint */
+    padding:10px 32px;       /* edge spacing */
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.brand .brand-name{font-size:18px;line-height:36px} 
+.brand .logo-img{width:36px;height:36px;object-fit:cover;border-radius:50%}
+.brand .brand-name{color:var(--primary);font-weight:700;letter-spacing:.6px}
+.logo-circle{width:40px;height:40px}
+
+.nav{display:flex;gap:12px;align-items:center}
+.nav a{color:var(--muted);text-decoration:none;font-size:14px;opacity:.95}
+.nav a.active{color:var(--primary);}
+.nav a:hover{color:var(--primary)}
+.header-right{display:flex;align-items:center;gap:12px}
+/* Home & About: plain links (not CTA button) */
+.nav-cta{background:transparent;padding:6px 8px;border-radius:6px;color:var(--muted);font-weight:600;text-decoration:none} 
+
+.header-actions{}
+.login-cta{
+    display:inline-block;padding:10px 20px;border-radius:28px;background:linear-gradient(90deg,#1fffd6,#00d6ad);color:#000;font-weight:700;box-shadow:0 6px 28px rgba(0,255,204,.12),0 0 30px rgba(31,255,214,.18);text-decoration:none}
+
+/* ================= HERO ================= */
+.hero{
+    position:relative;
+    min-height:100vh;
+    background:linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url('/images/hero-bg.png?v=@(vHeroBg)') center/cover no-repeat; 
+    background-blend-mode:multiply;
+    display:flex;align-items:center;justify-content:center;padding:90px 20px;
+}  
+.hero .container{max-width:1200px;display:grid;grid-template-columns:1fr minmax(280px,460px);align-items:center;gap:40px;padding:0 16px}
+.hero-content{max-width:640px;word-wrap:break-word;overflow-wrap:break-word} 
+
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 50%,rgba(31,255,214,.06),transparent 55%);pointer-events:none} 
+
+.hero-content{position:relative;z-index:2}
+.hero-content h1{font-size:56px;line-height:1.08;margin:0 0 8px;color:#fff;-webkit-text-stroke:0.6px #000;text-shadow:0 1px 0 rgba(0,0,0,0.6)}
+.hero-content span{color:var(--primary);-webkit-text-stroke:0.3px #000}  
+    .hero-content .lead{margin-top:12px;font-size:17px;color:#ffffff !important;max-width:560px;-webkit-text-stroke:0.1px #000;text-shadow:0 0.8px 0 rgba(0,0,0,0.5)} 
+.hero-content .cta{margin-top:28px;display:inline-block;padding:14px 40px;background:linear-gradient(90deg,#1fffd6,#00d6ad);color:#001;border-radius:34px;font-weight:800;box-shadow:0 12px 40px rgba(31,255,214,.18),0 0 60px rgba(31,255,214,.12);text-decoration:none}
+
+/* PHONE */
+.hero-visual{position:relative;z-index:2;display:flex;justify-content:center}
+.hero-visual img{width:420px;max-width:100%;filter:drop-shadow(0 30px 80px rgba(0,0,0,.5)),drop-shadow(0 0 40px rgba(31,255,214,.25));transform:translateY(0);animation:float 4s ease-in-out infinite}
+
+
+@@keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-18px)}
+}
+
+/* ================= FEATURE BLOCK ================= */
+.section{
+    padding:40px 40px;
+} 
+
+.feature-block{
+    background:linear-gradient(180deg,#07161d,#020b10);
+    border-radius:16px;
+    padding:30px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    align-items:center;
+} 
+
+.qr-glow{
+    width:240px;
+    max-width:80%;
+    margin:auto;
+    filter:drop-shadow(0 0 35px rgba(31,255,214,.7));
+    animation:pulse 2.8s infinite;
+}
+
+@@keyframes pulse{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.05)}
+    100%{transform:scale(1)}
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:12px;
+}
+
+.feature{
+    background:var(--card);
+    padding:14px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.feature:hover{
+    transform:translateY(-6px);
+    box-shadow:0 0 18px rgba(31,255,214,.25);
+}
+
+.feature h4{margin:6px 0;font-size:15px}
+.feature p{font-size:13px;color:var(--muted);margin:4px 0 0} 
+
+/* ================= SCANNER ================= */
+.scanner-section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    padding:30px 20px;
+    gap:20px;
+    max-width:1000px;
+    margin:0 auto;
+} 
+
+.scanner-section img{
+        width:360px;
+        max-width:100%;
+        filter:drop-shadow(0 0 24px rgba(31,255,214,.45));
+        border-radius:6px;display:block;margin:auto;
+    }
+
+    .scanner-img{width:360px;max-width:100%;display:block;margin:auto;border-radius:6px}
+
+/* Quiet box for scanner text */
+.quiet-box{
+    position:relative;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;
+    padding:20px 22px;
+    border:1px solid rgba(255,255,255,0.03);
+    outline:1px solid rgba(31,255,214,0.06);
+    box-shadow:0 10px 30px rgba(0,0,0,0.45), 0 0 18px rgba(31,255,214,0.03);
+    max-width:640px;
+    margin:auto 0;
+    text-align:left;
+    overflow:visible;
+}
+
+.quiet-box::before{
+    content:'';
+    position:absolute;
+    inset:-6px;
+    border-radius:14px;
+    pointer-events:none;
+    background:linear-gradient(90deg, rgba(31,255,214,0.06), rgba(0,214,187,0.04));
+    filter:blur(6px);
+    opacity:0.95;
+    mix-blend-mode:screen;
+}
+
+.quiet-box h2{margin:0 0 8px 0;font-size:34px; text-shadow:0 6px 24px rgba(31,255,214,0.04);}
+.quiet-box p.muted{margin:0;color:var(--muted);font-size:16px}
+
+@@media(max-width:900px){
+    .quiet-box{padding:16px;text-align:center}
+    .quiet-box h2{font-size:28px}
+}
+/* ================= FOOTER ================= */
+.footer{
+    text-align:center;
+    padding:15px;
+    background:#000;
+    opacity:.7;
+    font-size:13px;
+}
+
+/* ================= RESPONSIVE ================= */
+@@media(max-width:900px){
+    .site-header .container{padding:10px 12px;align-items:center}
+    .brand{gap:8px}
+    .nav{gap:8px}
+    .header-right{width:100%;justify-content:flex-end;gap:8px}
+
+    .hero,.feature-block,.scanner-section{
+        grid-template-columns:1fr;
+        padding:40px 20px;
+        text-align:center;
+    }
+    .hero .container{grid-template-columns:1fr}
+    .hero-content h1{font-size:32px}
+    .hero-content .lead{font-size:15px}
+
+    .features{grid-template-columns:1fr}
+    .scanner-section{grid-template-columns:1fr;text-align:center}
+    .scanner-section img{margin-top:16px;width:260px;max-width:80%}
+    .scanner-img{width:260px;max-width:80%}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <img src="~/images/B2E_Logo_Final.jpg?v=@(vLogo)" alt="Book2Enter" class="logo-img logo-circle" />
+      <span class="brand-name">Book2Enter</span>
+    </div> 
+
+    <div class="header-right">
+      <nav class="nav">
+        <a href="#" class="nav-cta active">Home</a>
+        <a href="/Home/About" class="nav-cta">About us</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="/Home/Login" class="login-cta">Login</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <h1>Simplify Event Entry.<br><span>Secure Attendance.</span></h1>
+      <p class="lead">QR-Based Event Check-In System — fast, secure, and real-time access control.</p>
+      <a href="/Home/Login" class="cta">Get Started</a>
+    </div>
+
+    <div class="hero-visual">
+      <img src="~/images/hero-phone.png?v=@(vHeroPhone)" alt="QR Phone" />
+    </div> 
+  </div>
+</section>
+
+<!-- FEATURE BLOCK -->
+<div class="section">
+    <div class="feature-block">
+        <img src="~/images/qr-glow.png?v=@(vQrGlow)" class="qr-glow" alt="QR Glow">
+
+        <div>
+            <h2>Modern Reinvention of Event Check-In</h2>
+            <p class="muted">Scan and verify attendee QR codes in seconds.</p>
+
+            <div class="features">
+                <div class="feature">
+                    <h4>Fast QR Check-In</h4>
+                    <p>Instant scanning with zero delays.</p>
+                </div>
+                <div class="feature">
+                    <h4>Secure Access</h4>
+                    <p>Advanced verification ensures authenticity.</p>
+                </div>
+                <div class="feature">
+                    <h4>Real-Time Tracking</h4>
+                    <p>Monitor attendance live.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<style>
-    .home-wrapper{
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        padding:40px 0;
-    }
-    .home-card{
-        max-width:900px;
-        width:100%;
-        background:#0f1720;
-        color:#fff;
-        border-radius:12px;
-        padding:28px;
-        box-shadow:0 10px 30px rgba(0,0,0,.4);
-    }
-    .home-row{display:flex;gap:20px;align-items:center}
-    .home-qr{flex:0 0 200px}
-    .home-qr img{width:200px;border-radius:8px}
-    .home-info{flex:1}
-    .home-info h2{margin-top:0}
-    .btn-cta{margin-top:12px}
-</style>
+<!-- SCANNER -->
+<div class="scanner-section">
+    <div class="quiet-box">
+        <h2>Scan & Enter Seamlessly</h2>
+        <p class="muted">Effortless and secure QR code scanning for any event.</p>
+    </div>
+    <img src="~/images/scanner.png?v=@(vScanner)" alt="Scanner" class="scanner-img">
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 Book2Enter · All Rights Reserved
+</div>
+
+</body>
+</html>
