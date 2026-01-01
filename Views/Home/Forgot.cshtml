@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Book2Enter | Login</title>
+    <title>Book2Enter | Forgot Password</title>
 
     <style>
         :root {
@@ -177,16 +177,15 @@
         <div id="scanLine" class="scan-line"></div>
     </div>
 
-    <h2>Book2Enter</h2>
-    <p style="font-size:13px;opacity:.7">QR-Based Event Entry System</p>
+    <h2>Forgot Password</h2>
+    <p style="font-size:13px;opacity:.7">Enter your User ID or Email to reset your password via OTP.</p>
 
-    <!-- LOGIN -->
-    <div id="loginBox">
-        <input id="userId" type="text" placeholder="User ID" />
-        <input id="password" type="password" placeholder="Password" />
-        <button class="main" id="loginBtn">Login</button>
-        <a asp-controller="Home" asp-action="Forgot" id="forgotLink" class="forgot">Forgot Password?</a>
-        <div class="error-text" id="errLogin"></div>
+    <!-- STEP 1: SEND OTP -->
+    <div id="sendBox">
+        <input id="userId" type="text" placeholder="User ID or Email" />
+        <button class="main" id="sendOtpBtn">Send OTP</button>
+        <a href="@Url.Action("Login","Home")" class="forgot">Back to Login</a>
+        <div class="error-text" id="errSend"></div>
     </div>
 
     <!-- OTP -->
@@ -207,8 +206,6 @@
 </div>
 
 <script>
-    let currentUser = null;
-
     function animateScan() {
         const scan = document.getElementById('scanLine');
         const logo = document.getElementById('logoBox');
@@ -235,37 +232,46 @@
         return res.json();
     }
 
-    loginBtn.onclick = async () => {
+    sendOtpBtn.onclick = async () => {
         const uid = userId.value.trim();
-        const pwd = password.value;
-
-        if (!uid || !pwd) {
-            errLogin.textContent = 'Enter User ID and Password';
-            errLogin.style.display = 'block';
-            return;
-        }
-
+        if (!uid) { errSend.textContent = 'Enter User ID or Email'; errSend.style.display = 'block'; return; }
+        errSend.style.display = 'none';
         animateScan();
+        try {
+            const res = await postJson('/Home/SendOtp', { UserId: uid, Otp: '', Purpose: 'forgot' });
+            if (!res.success) { errSend.textContent = res.message || 'Failed to send OTP'; errSend.style.display = 'block'; return; }
+            // proceed to OTP
+            sendBox.style.display = 'none';
+            otpBox.style.display = 'block';
+        } catch (e) { errSend.textContent = 'Request failed'; errSend.style.display = 'block'; }
+    };
 
-        setTimeout(async () => {
-            const res = await postJson('/Home/LoginAjax', {
-                UserId: uid,
-                Password: pwd
-            });
+    verifyOtpBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        const o = otp.value.trim();
+        if (!o) { errOtp.textContent = 'Enter OTP'; errOtp.style.display = 'block'; return; }
+        errOtp.style.display = 'none';
+        try {
+            const res = await postJson('/Home/VerifyOtp', { UserId: uid, Otp: o, Purpose: 'forgot' });
+            if (!res.success || !res.allowReset) { errOtp.textContent = res.message || 'Invalid OTP'; errOtp.style.display = 'block'; return; }
+            otpBox.style.display = 'none';
+            changeBox.style.display = 'block';
+        } catch (e) { errOtp.textContent = 'Request failed'; errOtp.style.display = 'block'; }
+    };
 
-            if (!res.success) {
-                errLogin.textContent = res.message || 'Invalid credentials';
-                errLogin.style.display = 'block';
-                return;
-            }
-
-            if (res.requiresOtp) {
-                currentUser = uid;
-                otpBox.style.display = 'block';
-            } else {
-                window.location.href = res.redirectUrl;
-            }
-        }, 600);
+    changePassBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        const p1 = newPass.value;
+        const p2 = confirmPass.value;
+        if (!p1 || !p2) { errChange.textContent = 'Enter and confirm password'; errChange.style.display = 'block'; return; }
+        if (p1 !== p2) { errChange.textContent = 'Passwords do not match'; errChange.style.display = 'block'; return; }
+        errChange.style.display = 'none';
+        try {
+            const res = await postJson('/Home/ChangePassword', { UserId: uid, NewPassword: p1 });
+            if (!res.success) { errChange.textContent = res.message || 'Failed to change password'; errChange.style.display = 'block'; return; }
+            // redirect to login
+            window.location.href = res.redirectUrl || '/Home/Login';
+        } catch (e) { errChange.textContent = 'Request failed'; errChange.style.display = 'block'; }
     };
 </script>
 
