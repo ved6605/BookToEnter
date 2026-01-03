@@ -98,11 +98,11 @@ namespace Book2Enter.Controllers
             };
         }
 
-        // Home page (removed) — redirect to Login
+        // Home page — render Index view
         [HttpGet]
         public IActionResult Index()
         {
-            return RedirectToAction("Login");
+            return View();
         }
 
         [HttpGet]
