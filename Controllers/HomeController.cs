@@ -106,6 +106,12 @@ namespace Book2Enter.Controllers
         }
 
         [HttpGet]
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
