@@ -163,6 +163,12 @@
         .change-box {
             display: none;
         }
+
+        /* OTP input grid */
+        .otp-grid { display:flex; gap:8px; justify-content:center; margin:12px 0; }
+        .otp-grid input { width:44px; height:44px; text-align:center; font-size:18px; border-radius:8px; border:2px solid transparent; background:#1b1b1b; color:white; }
+        .otp-grid input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 10px rgba(0,255,204,.3); transform:scale(1.02); }
+        .otp-grid input::placeholder { opacity:.4; }
     </style>
 </head>
 
@@ -191,23 +197,35 @@
 
     <!-- OTP -->
     <div class="otp-box" id="otpBox">
-        <input id="otp" type="text" placeholder="Enter OTP" />
+        <h4 style="margin:0 0 10px 0;">Enter OTP</h4>
+        <div class="otp-grid" id="otpGrid">
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="0" />
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="1" />
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="2" />
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="3" />
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="4" />
+            <input inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input" data-index="5" />
+        </div>
         <button class="main" id="verifyOtpBtn">Verify OTP</button>
         <div class="error-text" id="errOtp"></div>
-    </div>
+        <a href="#" id="backToLoginFromOtp" class="forgot" style="display:block;margin-top:8px;text-align:left">Back to Login</a>
+    </div> 
 
     <!-- CHANGE PASSWORD -->
     <div class="change-box" id="changeBox">
+        <h4 style="margin:0 0 10px 0;">Reset Password</h4>
         <input id="newPass" type="password" placeholder="New Password" />
         <input id="confirmPass" type="password" placeholder="Confirm Password" />
         <button class="main" id="changePassBtn">Set Password</button>
         <div class="error-text" id="errChange"></div>
+        <a href="#" id="backToLogin" class="forgot" style="display:block;margin-top:8px;text-align:left">Back to Login</a>
     </div>
 
 </div>
 
 <script>
     let currentUser = null;
+    let otpPurpose = null; // 'firstLogin' or 'forgot'
 
     function animateScan() {
         const scan = document.getElementById('scanLine');
@@ -235,6 +253,7 @@
         return res.json();
     }
 
+    // Normal login flow (existing)
     loginBtn.onclick = async () => {
         const uid = userId.value.trim();
         const pwd = password.value;
@@ -261,11 +280,138 @@
 
             if (res.requiresOtp) {
                 currentUser = uid;
+                otpPurpose = 'firstLogin';
+                loginBox.style.display = 'none';
                 otpBox.style.display = 'block';
             } else {
                 window.location.href = res.redirectUrl;
             }
         }, 600);
+    };
+
+    // Forgot password flow (Send OTP -> Verify -> Reset)
+    forgotLink.onclick = async (e) => {
+        e.preventDefault();
+        const uid = userId.value.trim();
+        if (!uid) {
+            errLogin.textContent = 'Enter your User ID to reset password';
+            errLogin.style.display = 'block';
+            return;
+        }
+
+        errLogin.style.display = 'none';
+        animateScan();
+
+        setTimeout(async () => {
+            const res = await postJson('/Home/SendOtp', { UserId: uid, Purpose: 'forgot' });
+            if (!res.success) {
+                errLogin.textContent = res.message || 'Unable to send OTP';
+                errLogin.style.display = 'block';
+                return;
+            }
+
+            currentUser = uid;
+            otpPurpose = 'forgot';
+            loginBox.style.display = 'none';
+            otpBox.style.display = 'block';
+            // clear and focus the new OTP inputs
+            clearOtpInputs();
+            setTimeout(() => { if (otpInputs.length) otpInputs[0].focus(); }, 60);
+            errOtp.textContent = res.message || 'OTP sent';
+            errOtp.style.display = 'block';
+            setTimeout(() => errOtp.style.display = 'none', 2500);
+        }, 600);
+    };
+
+    // OTP helpers: inputs, get/clear values, and keyboard behavior
+    const otpInputs = Array.from(document.querySelectorAll('.otp-input'));
+    function getOtpVal() { return otpInputs.map(i => i.value).join('').trim(); }
+    function clearOtpInputs() { otpInputs.forEach(i => i.value = ''); }
+
+    otpInputs.forEach((input, idx) => {
+        input.addEventListener('input', (e) => {
+            input.value = input.value.replace(/\D/g, '').slice(0,1);
+            if (input.value && idx < otpInputs.length - 1) otpInputs[idx + 1].focus();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && idx > 0) {
+                otpInputs[idx - 1].focus();
+            }
+        });
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const digits = paste.replace(/\D/g, '').slice(0, otpInputs.length);
+            digits.split('').forEach((d, i) => otpInputs[i].value = d);
+            const focusIndex = Math.min(digits.length, otpInputs.length - 1);
+            otpInputs[focusIndex].focus();
+        });
+    });
+
+    verifyOtpBtn.onclick = async () => {
+        const otpVal = getOtpVal();
+        if (!otpVal || otpVal.length < otpInputs.length || !currentUser) {
+            errOtp.textContent = 'Enter the full 6-digit OTP sent to your email';
+            errOtp.style.display = 'block';
+            return;
+        }
+
+        const res = await postJson('/Home/VerifyOtp', { UserId: currentUser, Otp: otpVal, Purpose: otpPurpose });
+        if (!res.success) {
+            errOtp.textContent = res.message || 'Invalid or expired OTP';
+            errOtp.style.display = 'block';
+            return;
+        }
+
+        // If this was first login, require password change; if forgot -> allow reset
+        if (res.requirePasswordChange || res.allowReset) {
+            otpBox.style.display = 'none';
+            changeBox.style.display = 'block';
+            setTimeout(() => { newPass.focus(); }, 60);
+        }
+    };
+
+    changePassBtn.onclick = async () => {
+        const np = newPass.value;
+        const cp = confirmPass.value;
+        if (!np || !cp) {
+            errChange.textContent = 'Fill in both password fields';
+            errChange.style.display = 'block';
+            return;
+        }
+        if (np !== cp) {
+            errChange.textContent = 'Passwords do not match';
+            errChange.style.display = 'block';
+            return;
+        }
+
+        const res = await postJson('/Home/ChangePassword', { UserId: currentUser, NewPassword: np });
+        if (!res.success) {
+            errChange.textContent = res.message || 'Could not change password';
+            errChange.style.display = 'block';
+            return;
+        }
+
+        // On success redirect to appropriate page
+        window.location.href = res.redirectUrl || '/';
+    };
+
+    // Back-to-login handlers (cancel flows)
+    backToLogin.onclick = backToLoginFromOtp.onclick = (e) => {
+        e.preventDefault();
+        currentUser = null;
+        otpPurpose = null;
+        loginBox.style.display = 'block';
+        otpBox.style.display = 'none';
+        changeBox.style.display = 'none';
+        userId.value = '';
+        password.value = '';
+        clearOtpInputs();
+        newPass.value = '';
+        confirmPass.value = '';
+        errLogin.style.display = 'none';
+        errOtp.style.display = 'none';
+        errChange.style.display = 'none';
     };
 </script>
 

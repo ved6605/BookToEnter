@@ -94,7 +94,9 @@ namespace Book2Enter.Controllers
             {
                 "Admin" => "/?role=Admin",
                 "Faculty" => "/?role=Faculty",
-                _ => "/?role=Student",
+                // Send students to the dedicated Student dashboard
+                "Student" => "/Student/Dashboard",
+                _ => "/",
             };
         }
 

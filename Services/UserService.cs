@@ -38,6 +38,35 @@ namespace Book2Enter.Services
                 Role = "Faculty",
                 IsFirstLogin = true
             };
+
+            // Added static test accounts as requested
+            _users["149"] = new User
+            {
+                UserId = "149",
+                Password = "ved",
+                Email = "149@utu.ac.in",
+                Role = "Student",
+                IsFirstLogin = false
+            };
+
+            // NOTE: user 145 will be treated as a Student so it lands on the Student Dashboard for testing
+            _users["145"] = new User
+            {
+                UserId = "145",
+                Password = "riya",
+                Email = "145@utu.ac.in",
+                Role = "Student",
+                IsFirstLogin = false
+            };
+
+            _users["177"] = new User
+            {
+                UserId = "177",
+                Password = "zeel",
+                Email = "177@utu.ac.in",
+                Role = "Faculty",
+                IsFirstLogin = false
+            };
         }
 
         public User? GetByUserId(string userId)
