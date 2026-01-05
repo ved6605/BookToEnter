@@ -117,9 +117,15 @@ namespace Book2Enter.Controllers
             };
         }
 
-        // Home page (was Pages/Home)
+        // Home page — render Index view
         [HttpGet]
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult About()
         {
             return View();
         }

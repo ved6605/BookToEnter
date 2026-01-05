@@ -1,6 +1,200 @@
 @{
-    ViewData["Title"] = "About";
+        Layout = null;
+        var env = Context.RequestServices.GetService<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
+        var wwwroot = env?.WebRootPath ?? "";
+        Func<string,string> t = file => {
+                var p = System.IO.Path.Combine(wwwroot, "images", file);
+                return System.IO.File.Exists(p) ? System.IO.File.GetLastWriteTimeUtc(p).Ticks.ToString() : "0";
+        };
+        var vLogo = t("B2E_Logo_Final.jpg");
 }
 
-<h2>About</h2>
-<p>This is the About page for Book2Enter. Add your content here.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>About Us – Book2Enter</title>
+        <style>
+        :root{--primary:#1fffd6;--bg:#020b10;--card:#0b1c24;--muted:#9fb8c2}
+        *{box-sizing:border-box}
+        body{margin:0;font-family:"Segoe UI",sans-serif;background:var(--bg);color:#fff;-webkit-font-smoothing:antialiased}
+
+        /* Header styles are intentionally identical to Home */
+        .site-header{position:sticky;top:0;z-index:20;background:transparent}
+        .site-header .container{width:100%;max-width:none;padding:10px 32px;display:flex;align-items:center;justify-content:space-between}
+        .brand{display:flex;align-items:center;gap:12px}
+        .logo-img{width:36px;height:36px;object-fit:cover;border-radius:50%}
+        .brand-name{color:var(--primary);font-weight:700;font-size:18px}
+        .nav{display:flex;gap:12px;align-items:center}
+        .nav a{color:var(--muted);text-decoration:none;font-size:14px;opacity:.95}
+        .nav a.active{color:var(--primary)}
+        .nav-cta{background:transparent;padding:6px 8px;border-radius:6px;color:var(--muted);font-weight:600}
+        .header-right{display:flex;align-items:center;gap:12px}
+        .login-cta{display:inline-block;padding:10px 20px;border-radius:28px;background:linear-gradient(90deg,#1fffd6,#00d6ad);color:#000;font-weight:700;text-decoration:none}
+
+        /* Page visuals */
+        .about-hero{min-height:60vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 20px;position:relative;overflow:hidden}
+        .about-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%, rgba(31,255,214,.04), transparent 15%), radial-gradient(circle at 80% 70%, rgba(0,214,187,.03), transparent 30%);pointer-events:none}
+        .about-inner{position:relative;z-index:2;max-width:980px}
+        .about-inner h1{font-size:44px;margin:0;line-height:1;text-shadow:0 8px 40px rgba(31,255,214,0.06)}
+        .about-inner h1 .accent{color:var(--primary);text-shadow:0 10px 48px rgba(31,255,214,0.18)}
+        .about-inner p.lead{color:var(--muted);margin-top:12px;font-size:18px}
+
+        /* floating decorative shapes */
+        .shapes{position:absolute;inset:0;pointer-events:none}
+        .shape{position:absolute;border-radius:50%;opacity:.18;filter:blur(20px)}
+        .shape.s1{width:260px;height:260px;background:linear-gradient(90deg,#1fffd6,#00d6ad);left:-60px;top:10%;animation:float 8s ease-in-out infinite}
+        .shape.s2{width:180px;height:180px;background:linear-gradient(90deg,#00d6ad,#1fffd6);right:-40px;top:55%;animation:float 9s ease-in-out infinite}
+        .shape.s3{width:120px;height:120px;background:linear-gradient(90deg,#1fffd6,#00d6ad);left:20%;bottom:-40px;animation:float 7s ease-in-out infinite}
+        @@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-18px)}100%{transform:translateY(0)}}
+
+        /* Section layout */
+        .section{max-width:1100px;margin:40px auto;padding:0 20px}
+        .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+        .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(0,0,0,.55);transform:translateY(18px);opacity:0;transition:all .6s ease}
+        .card.show{transform:none;opacity:1}
+        .card h3{margin:0 0 6px 0;color:var(--primary)}
+
+        /* Flow timeline */
+        .flow{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:18px}
+        .step{min-width:140px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);text-align:center;position:relative}
+        .arrow{font-weight:700;color:var(--muted);margin:0 8px}
+
+        /* Roles */
+        .roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:14px}
+        .role{background:var(--card);padding:16px;border-radius:12px;text-align:center;transition:transform .25s,box-shadow .25s}
+        .role:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(31,255,214,.06)}
+
+        /* Features grid */
+        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:14px}
+        .feature{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.03);text-align:center}
+
+        /* Unique + vision */
+        .unique{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px}
+        .unique .box{flex:1;min-width:240px;padding:18px;border-radius:12px;background:linear-gradient(180deg,#07161d,#020b10);border-left:4px solid var(--primary)}
+
+        /* Contact */
+        .contact-cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+        .contact-card{background:var(--card);padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);transition:box-shadow .2s}
+        .contact-card a{color:var(--primary);text-decoration:none}
+        .contact-card:hover{box-shadow:0 18px 50px rgba(31,255,214,.08)}
+
+        /* Small screens */
+        @@media(max-width:900px){.about-inner h1{font-size:28px}.section{margin:24px auto}}
+        </style>
+</head>
+<body>
+
+<!-- HEADER (exact same structure and classes as Home) -->
+<header class="site-header">
+    <div class="container header-inner">
+        <div class="brand">
+            <img src="~/images/B2E_Logo_Final.jpg?v=@(vLogo)" alt="Book2Enter" class="logo-img" />
+            <span class="brand-name">Book2Enter</span>
+        </div>
+
+        <div class="header-right">
+            <nav class="nav">
+                <a asp-controller="Home" asp-action="Index" class="nav-cta">Home</a>
+                <a asp-controller="Home" asp-action="About" class="nav-cta active">About us</a>
+            </nav>
+
+            <div class="header-actions">
+                <a asp-controller="Home" asp-action="Login" class="login-cta">Login</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- HERO / ABOUT -->
+<section class="about-hero">
+    <div class="shapes" aria-hidden="true">
+        <span class="shape s1"></span>
+        <span class="shape s2"></span>
+        <span class="shape s3"></span>
+    </div>
+    <div class="about-inner">
+        <h1>About <span class="accent">Book2Enter</span></h1>
+        <p class="lead">Secure QR booking and fast event entry — built for campuses.</p>
+    </div>
+</section>
+
+<!-- WHAT IT IS -->
+<section class="section">
+    <h2>What it is</h2>
+    <div class="card" data-reveal style="max-width:900px;margin:0 auto;">
+        Book2Enter is a lightweight platform that handles event booking, QR generation, and secure entry verification — simplifying event operations for students, coordinators, and admins.
+    </div>
+</section>
+
+<!-- VISION & MISSION -->
+<section class="section">
+    <div class="unique">
+        <div class="box" data-reveal>
+            <h3>Vision</h3>
+            <div>Secure, seamless event access across campuses — reliable at any scale.</div>
+        </div>
+        <div class="box" data-reveal>
+            <h3>Mission</h3>
+            <div>Reduce entry friction, improve attendance accuracy, and give organisers real-time control with minimal overhead.</div>
+        </div>
+    </div>
+</section>
+
+<!-- KEY FEATURES -->
+<section class="section">
+    <h2>Key features</h2>
+    <div class="features">
+        <div class="feature" data-reveal>OTP login</div>
+        <div class="feature" data-reveal>Role-based access</div>
+        <div class="feature" data-reveal>QR verification</div>
+        <div class="feature" data-reveal>Seat limits & approvals</div>
+        <div class="feature" data-reveal>Live attendance tracking</div>
+        <div class="feature" data-reveal>Simple admin tools</div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section">
+    <h2>Contact</h2>
+    <p style="text-align:center;color:var(--muted)">Reach the Book2Enter team</p>
+    <div class="contact-cards">
+        <div class="contact-card"><a href="mailto:23bmiit149@gmail.com">23bmiit149@gmail.com</a></div>
+        <div class="contact-card"><a href="mailto:23bmiit145@gmail.com">23bmiit145@gmail.com</a></div>
+        <div class="contact-card"><a href="mailto:23bmiit177@gmail.com">23bmiit177@gmail.com</a></div>
+    </div>
+</section>
+
+
+<!-- FOOTER (same as Home) -->
+<div class="footer" style="text-align:center;padding:15px;background:#000;opacity:.7;font-size:13px">© 2026 Book2Enter · All Rights Reserved</div>
+
+<script>
+// scroll reveal
+const els = document.querySelectorAll('[data-reveal]');
+const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+        if(e.isIntersecting){
+            e.target.classList.add('show');
+            io.unobserve(e.target);
+        }
+    });
+},{threshold:0.12});
+els.forEach(e=>io.observe(e));
+
+// gentle parallax on shapes
+const hero = document.querySelector('.about-hero');
+const shapes = document.querySelectorAll('.shape');
+if(hero){
+    hero.addEventListener('mousemove', e=>{
+        const r = hero.getBoundingClientRect();
+        const x = (e.clientX - r.left)/r.width - 0.5;
+        const y = (e.clientY - r.top)/r.height - 0.5;
+        shapes.forEach((s,i)=> s.style.transform = `translate(${x*(12*(i+1))}px, ${y*(12*(i+1))}px)`);
+    });
+}
+</script>
+
+</body>
+</html>
