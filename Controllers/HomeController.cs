@@ -23,6 +23,12 @@ namespace Book2Enter.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Forgot()
+        {
+            return View();
+        }
+
         // API: Login (AJAX)
         public class LoginRequest { public string UserId { get; set; } = string.Empty; public string Password { get; set; } = string.Empty; }
 
@@ -74,7 +80,7 @@ namespace Book2Enter.Controllers
             return Json(new { success = true, allowReset = true, message = "OTP verified. You may reset your password." });
         }
 
-        public class ChangePasswordRequest { public string UserId { get; set; } = string.Empty; public string NewPassword { get; set; } = string.Empty; }
+        public class ChangePasswordRequest { public string UserId { get; set; } = string.Empty; public string CurrentPassword { get; set; } = string.Empty; public string NewPassword { get; set; } = string.Empty; }
 
         [HttpPost]
         [IgnoreAntiforgeryToken]
@@ -83,9 +89,22 @@ namespace Book2Enter.Controllers
             var user = _userService.GetByUserId(req.UserId);
             if (user == null) return Json(new { success = false, message = "Unknown User ID" });
 
+            // If caller provided a current password, validate it (regular change-password flow).
+            if (!string.IsNullOrEmpty(req.CurrentPassword))
+            {
+                var (ok, msg) = _userService.ValidateCredentials(req.UserId, req.CurrentPassword);
+                if (!ok) return Json(new { success = false, message = "Current password is incorrect" });
+            }
+
             _userService.SetPassword(req.UserId, req.NewPassword);
             var redirect = RoleToUrl(user.Role);
             return Json(new { success = true, redirectUrl = redirect, message = "Password changed" });
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
         }
 
         private string RoleToUrl(string role)

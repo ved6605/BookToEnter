@@ -1,0 +1,279 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Book2Enter | Forgot Password</title>
+
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --card: #111;
+            --muted: #aaa;
+            --error: #ff6b6b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .login-card {
+            width: 380px;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,.6);
+            animation: fadeIn .8s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* LOGO BOX */
+        .logo-box {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 14px;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+
+            /* NEON BORDER */
+            border: 2px solid var(--primary);
+            box-shadow:
+                0 0 8px rgba(0,255,204,.6),
+                0 0 18px rgba(0,255,204,.4),
+                inset 0 0 8px rgba(0,255,204,.3);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+
+            /* SLIGHT ZOOM */
+            transform: scale(1.08);
+
+            /* LOCKED STATE */
+            filter: grayscale(1) blur(3px);
+            transition: filter .6s ease, transform .6s ease;
+        }
+
+        /* UNLOCKED STATE */
+        .logo-box.unlocked img {
+            filter: none;
+            transform: scale(1.12); /* tiny extra zoom on unlock */
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+            display: none;
+        }
+
+        /* INPUTS */
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 7px;
+            border: 2px solid transparent;
+            background: #1b1b1b;
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0,255,204,.4);
+            transform: scale(1.02);
+        }
+
+        input.error {
+            border-color: var(--error);
+            animation: shake .35s;
+        }
+
+        @@keyframes shake {
+            0%   { transform: translateX(0); }
+            25%  { transform: translateX(-5px); }
+            50%  { transform: translateX(5px); }
+            75%  { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* BUTTON */
+        button.main {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 7px;
+            background: var(--primary);
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button.main:hover {
+            background: #00d6ad;
+        }
+
+        .forgot {
+            font-size: 14px;
+            color: var(--muted);
+            display: block;
+            margin-top: 8px;
+            text-align: right;
+            text-decoration: none;
+        }
+
+        .forgot:hover { color: var(--primary); }
+
+        .error-text {
+            margin-top: 8px;
+            color: var(--error);
+            display: none;
+        }
+
+        .otp-box,
+        .change-box {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <!-- LOGO WITH NEON BORDER + SCAN -->
+    <div id="logoBox" class="logo-box">
+        <img src="@Url.Content("~/images/B2E_Logo_Final.jpg")"
+             alt="Book2Enter Logo" />
+        <div id="scanLine" class="scan-line"></div>
+    </div>
+
+    <h2>Forgot Password</h2>
+    <p style="font-size:13px;opacity:.7">Enter your User ID or Email to reset your password via OTP.</p>
+
+    <!-- STEP 1: SEND OTP -->
+    <div id="sendBox">
+        <input id="userId" type="text" placeholder="User ID or Email" />
+        <button class="main" id="sendOtpBtn">Send OTP</button>
+        <a href="@Url.Action("Login","Home")" class="forgot">Back to Login</a>
+        <div class="error-text" id="errSend"></div>
+    </div>
+
+    <!-- OTP -->
+    <div class="otp-box" id="otpBox">
+        <input id="otp" type="text" placeholder="Enter OTP" />
+        <button class="main" id="verifyOtpBtn">Verify OTP</button>
+        <div class="error-text" id="errOtp"></div>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <div class="change-box" id="changeBox">
+        <input id="newPass" type="password" placeholder="New Password" />
+        <input id="confirmPass" type="password" placeholder="Confirm Password" />
+        <button class="main" id="changePassBtn">Set Password</button>
+        <div class="error-text" id="errChange"></div>
+    </div>
+
+</div>
+
+<script>
+    function animateScan() {
+        const scan = document.getElementById('scanLine');
+        const logo = document.getElementById('logoBox');
+
+        scan.style.display = 'block';
+
+        scan.animate(
+            [{ top: '0' }, { top: '104px' }],
+            { duration: 1200 }
+        );
+
+        setTimeout(() => {
+            scan.style.display = 'none';
+            logo.classList.add('unlocked');
+        }, 1200);
+    }
+
+    async function postJson(url, data) {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return res.json();
+    }
+
+    sendOtpBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        if (!uid) { errSend.textContent = 'Enter User ID or Email'; errSend.style.display = 'block'; return; }
+        errSend.style.display = 'none';
+        animateScan();
+        try {
+            const res = await postJson('/Home/SendOtp', { UserId: uid, Otp: '', Purpose: 'forgot' });
+            if (!res.success) { errSend.textContent = res.message || 'Failed to send OTP'; errSend.style.display = 'block'; return; }
+            // proceed to OTP
+            sendBox.style.display = 'none';
+            otpBox.style.display = 'block';
+        } catch (e) { errSend.textContent = 'Request failed'; errSend.style.display = 'block'; }
+    };
+
+    verifyOtpBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        const o = otp.value.trim();
+        if (!o) { errOtp.textContent = 'Enter OTP'; errOtp.style.display = 'block'; return; }
+        errOtp.style.display = 'none';
+        try {
+            const res = await postJson('/Home/VerifyOtp', { UserId: uid, Otp: o, Purpose: 'forgot' });
+            if (!res.success || !res.allowReset) { errOtp.textContent = res.message || 'Invalid OTP'; errOtp.style.display = 'block'; return; }
+            otpBox.style.display = 'none';
+            changeBox.style.display = 'block';
+        } catch (e) { errOtp.textContent = 'Request failed'; errOtp.style.display = 'block'; }
+    };
+
+    changePassBtn.onclick = async () => {
+        const uid = userId.value.trim();
+        const p1 = newPass.value;
+        const p2 = confirmPass.value;
+        if (!p1 || !p2) { errChange.textContent = 'Enter and confirm password'; errChange.style.display = 'block'; return; }
+        if (p1 !== p2) { errChange.textContent = 'Passwords do not match'; errChange.style.display = 'block'; return; }
+        errChange.style.display = 'none';
+        try {
+            const res = await postJson('/Home/ChangePassword', { UserId: uid, NewPassword: p1 });
+            if (!res.success) { errChange.textContent = res.message || 'Failed to change password'; errChange.style.display = 'block'; return; }
+            // redirect to login
+            window.location.href = res.redirectUrl || '/Home/Login';
+        } catch (e) { errChange.textContent = 'Request failed'; errChange.style.display = 'block'; }
+    };
+</script>
+
+</body>
+</html>
